@@ -8,18 +8,26 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu:///system"  # or specify the connection string to your libvirt host
+  uri = "qemu:///system"  # specify your Libvirt connection string
 }
 
-# Use the existing default storage pool
-data "libvirt_pool" "default" {
-  name = "default"
+# Create the default storage pool
+resource "libvirt_pool" "default" {
+  name   = "default"
+  state  = "running"
+  type   = "dir"
+  path   = "/var/lib/libvirt/images"
+  permissions {
+    owner   = "root"
+    group   = "libvirt"
+    mode    = "0775"
+  }
 }
 
 # Create a volume from an existing QCOW2 image
 resource "libvirt_volume" "ubuntu-qcow2" {
   name   = "ubuntu-22.04.qcow2"
-  pool   = data.libvirt_pool.default.name
+  pool   = libvirt_pool.default.name
   source = "/var/lib/libvirt/images/ubuntu-22.04.qcow2"
   format = "qcow2"
 }
