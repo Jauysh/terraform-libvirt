@@ -14,7 +14,10 @@ provider "libvirt" {
 resource "libvirt_pool" "default" {
   name = "default-pool"
   type = "dir"
-  path = "/var/lib/libvirt/images"
+
+  target {
+    path = "/var/lib/libvirt/images"
+  }
 }
 
 
