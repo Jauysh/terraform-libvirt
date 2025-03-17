@@ -22,7 +22,7 @@ resource "libvirt_pool" "vm_pool" {
   name = "vm_pool"
   type = "dir"
   target {
-    path = "/var/lib/libvirt/terraform-images"  # Use a different directory
+    path = "/var/lib/libvirt/terraform-images"  # Ensure this path is correct
   }
 }
 
