@@ -8,20 +8,13 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu:///system"  # specify your Libvirt connection string
+  # Configuration for libvirt provider
 }
 
-# Create the default storage pool
 resource "libvirt_pool" "default" {
-  name   = "default-pool"  # Updated to the correct pool name
-  state  = "running"
-  type   = "dir"
-  path   = "/var/lib/libvirt/images"
-  permissions {
-    owner   = "root"
-    group   = "libvirt"
-    mode    = "0775"
-  }
+  name = "default-pool"
+  type = "dir"
+  path = "/var/lib/libvirt/images"
 }
 
 
