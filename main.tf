@@ -1,5 +1,14 @@
+terraform {
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.8.3"
+    }
+  }
+}
+
 provider "libvirt" {
-  uri = "qemu:///system"
+  uri = "qemu:///system"  # or specify the connection string to your libvirt host
 }
 
 # Use the existing default storage pool
@@ -41,4 +50,3 @@ resource "libvirt_domain" "ubuntu_vm" {
     autoport = true
   }
 }
-
