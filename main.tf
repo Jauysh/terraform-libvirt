@@ -1,61 +1,52 @@
 terraform {
   required_providers {
     libvirt = {
-      source = "dmacvicar/libvirt"
-      version = "0.8.3"
+      source  = "dmacvicar/libvirt"
+      version = "0.6.3"
     }
   }
 }
 
 provider "libvirt" {
-  # Configuration for libvirt provider
+  uri = "qemu:///system"
 }
 
-resource "libvirt_pool" "default" {
-  name = "default-pool"
+resource "libvirt_network" "vm_network" {
+  name      = "vm_network"
+  mode      = "nat"
+  domain    = "vm.local"
+  addresses = ["192.168.122.0/24"]
+}
+
+resource "libvirt_pool" "vm_pool" {
+  name = "vm_pool"
   type = "dir"
-
-  target {
-    path = "/var/lib/libvirt/images"
-  }
+  path = "/var/lib/libvirt/images"
 }
 
-
-
-# Create a volume from an existing QCOW2 image
-resource "libvirt_volume" "ubuntu-qcow2" {
-  name   = "ubuntu-22.04.qcow2"
-  pool   = libvirt_pool.default.name
-  source = "/var/lib/libvirt/images/ubuntu-22.04.qcow2"
+resource "libvirt_volume" "vm_disk" {
+  name   = "vm_disk.qcow2"
+  pool   = libvirt_pool.vm_pool.name
   format = "qcow2"
+  size   = 10737418240  # 10 GB
 }
 
-
-
-
-# Define the virtual machine
-resource "libvirt_domain" "ubuntu_vm" {
-  name   = "ubuntu-vm"
-  memory = 2048    # 2GB RAM
-  vcpu   = 2       # 2 vCPUs
-
-  disk {
-    volume_id = libvirt_volume.ubuntu-qcow2.id
-  }
+resource "libvirt_domain" "vm" {
+  name   = "terraform-vm"
+  memory = "1024"
+  vcpu   = 1
 
   network_interface {
-    network_name = "default"
+    network_name = libvirt_network.vm_network.name
   }
 
-  console {
-    type = "pty"
-    target_type = "serial"
-    target_port = "0"
+  disk {
+    volume_id = libvirt_volume.vm_disk.id
   }
 
   graphics {
-    type = "vnc"
+    type        = "spice"
     listen_type = "address"
-    autoport = true
+    autoport    = true
   }
 }
