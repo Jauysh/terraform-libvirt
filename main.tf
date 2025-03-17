@@ -21,6 +21,7 @@ resource "libvirt_pool" "default" {
 }
 
 
+
 # Create a volume from an existing QCOW2 image
 resource "libvirt_volume" "ubuntu-qcow2" {
   name   = "ubuntu-22.04.qcow2"
