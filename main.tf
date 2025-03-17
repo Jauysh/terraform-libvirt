@@ -30,6 +30,9 @@ resource "libvirt_volume" "ubuntu-qcow2" {
   format = "qcow2"
 }
 
+
+
+
 # Define the virtual machine
 resource "libvirt_domain" "ubuntu_vm" {
   name   = "ubuntu-vm"
