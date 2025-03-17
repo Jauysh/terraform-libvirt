@@ -15,13 +15,15 @@ resource "libvirt_network" "vm_network" {
   name      = "vm_network"
   mode      = "nat"
   domain    = "vm.local"
-  addresses = ["192.168.122.0/24"]
+  addresses = ["192.168.123.0/24"]  # Changed subnet to avoid conflict
 }
 
 resource "libvirt_pool" "vm_pool" {
   name = "vm_pool"
   type = "dir"
-  path = "/var/lib/libvirt/images"
+  target {
+    path = "/var/lib/libvirt/images"  # Updated to use target.path
+  }
 }
 
 resource "libvirt_volume" "vm_disk" {
@@ -37,7 +39,7 @@ resource "libvirt_domain" "vm" {
   vcpu   = 1
 
   network_interface {
-    network_name = libvirt_network.vm_network.name
+    network_name = libvirt_network.vm_network.name  # Use the custom network
   }
 
   disk {
