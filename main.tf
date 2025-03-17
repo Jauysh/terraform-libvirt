@@ -14,14 +14,8 @@ provider "libvirt" {
 # Create the default storage pool
 resource "libvirt_pool" "default" {
   name   = "default"
-  state  = "running"
   type   = "dir"
   path   = "/var/lib/libvirt/images"
-  permissions {
-    owner   = "root"
-    group   = "libvirt"
-    mode    = "0775"
-  }
 }
 
 # Create a volume from an existing QCOW2 image
