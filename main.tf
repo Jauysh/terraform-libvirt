@@ -34,7 +34,7 @@ resource "libvirt_volume" "vm_disk" {
 }
 
 resource "libvirt_domain" "vm" {
-  name   = "terraform-vm"
+  name   = "terraform-vm-${formatdate("YYYYMMDDhhmmss", timestamp())}"  # Unique name
   memory = "1024"
   vcpu   = 1
 
