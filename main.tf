@@ -15,7 +15,7 @@ resource "libvirt_network" "vm_network" {
   name      = "vm_network"
   mode      = "nat"
   domain    = "vm.local"
-  addresses = ["192.168.123.0/24"]  # Changed subnet to avoid conflict
+  addresses = ["192.168.123.0/24"]  # Use a different subnet
 }
 
 resource "libvirt_pool" "vm_pool" {
@@ -39,7 +39,7 @@ resource "libvirt_domain" "vm" {
   vcpu   = 1
 
   network_interface {
-    network_name = libvirt_network.vm_network.name  # Use the custom network
+    network_name = libvirt_network.vm_network.name
   }
 
   disk {
